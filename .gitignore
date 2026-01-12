@@ -6,6 +6,10 @@
 !/tests/
 !/.github/
 
+# Packaging Files
+!/alpha.spec
+!/installer.iss
+
 # Re-ignore artifacts inside
 alpha/__pycache__/
 alpha/resources/__pycache__/

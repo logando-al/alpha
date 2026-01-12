@@ -1,0 +1,76 @@
+name: Release Build
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'alpha/version.py'
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller requests packaging PyQt6
+        
+    - name: Extract Version
+      id: get_version
+      run: |
+        $version = (Get-Content alpha/version.py) -match '__version__ = "(.*)"'
+        $v = $matches[1]
+        echo "VERSION=$v" >> $env:GITHUB_OUTPUT
+        echo "Detected version: $v"
+        
+    - name: Check if Tag Exists
+      id: check_tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        $tag = "v${{ steps.get_version.outputs.VERSION }}"
+        $exists = git ls-remote --tags origin $tag
+        if ($exists) {
+          echo "Tag $tag already exists. Skipping release."
+          echo "EXISTS=true" >> $env:GITHUB_OUTPUT
+        } else {
+          echo "Tag $tag does not exist. Creating release."
+          echo "EXISTS=false" >> $env:GITHUB_OUTPUT
+        }
+
+    - name: Build EXE with PyInstaller
+      if: steps.check_tag.outputs.EXISTS == 'false'
+      run: |
+        pyinstaller alpha.spec
+        
+    - name: Compile Installer with Inno Setup
+      if: steps.check_tag.outputs.EXISTS == 'false'
+      uses: Minionguyjosh/inno-setup-action@v1.2.2
+      with:
+        path: installer.iss
+        
+    - name: Create Release
+      if: steps.check_tag.outputs.EXISTS == 'false'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ steps.get_version.outputs.VERSION }}
+        name: Release v${{ steps.get_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+        files: |
+          dist/ALPHA/ALPHA.exe
+          dist/ALPHA_Installer_v*.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

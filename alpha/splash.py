@@ -12,7 +12,8 @@ class AlphaSplashScreen(QSplashScreen):
         
         # Let's just store data to draw
         self.progress = 0
-        self.version = "v1.0.0"
+        from alpha.version import __version__
+        self.version = f"v{__version__}"
         self.credits = "Developed by logando-al"
         self.license = "Open Source"
         
