@@ -9,6 +9,7 @@
 # Packaging Files
 !/alpha.spec
 !/installer.iss
+!/requirements.txt
 
 # Re-ignore artifacts inside
 alpha/__pycache__/
