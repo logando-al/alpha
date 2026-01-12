@@ -21,8 +21,14 @@ class ProjectInitializer:
         """Returns list of supported stacks."""
         # Defaults from code + config
         defaults = ["django", "fastapi"] + list(self.commands_config.get("stacks", {}).keys())
-        # ... logic ...
-        return sorted(list(set(defaults)))  # Simplified for brevity in this update
+        
+        # Scan templates directory
+        if self.templates_dir.exists():
+            for item in self.templates_dir.iterdir():
+                if item.is_dir() and not item.name.startswith((".", "__")):
+                    defaults.append(item.name)
+                    
+        return sorted(list(set(defaults)))
 
     def generate_project(self, config):
         """Generates the project structure using CLI commands."""
@@ -204,7 +210,14 @@ class ProjectInitializer:
     def _run_command(self, cmd, cwd):
         """Helper to run shell commands."""
         # Shell=True usually needed for complex commands or Windows
-        # check=True raises CalledProcessError on failure
+        
+        # CROSS-PLATFORM FIX:
+        # If running on Linux/Mac, replace Windows venv paths
+        if os.name != 'nt':
+            cmd = cmd.replace("venv/Scripts/", "venv/bin/")
+            cmd = cmd.replace("venv\\Scripts\\", "venv/bin/")
+            cmd = cmd.replace("venv/Scripts", "venv/bin") # Just in case
+            
         subprocess.run(cmd, cwd=cwd, shell=True, check=True)
 
     def _copy_stack_template(self, stack, destination):

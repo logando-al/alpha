@@ -29,7 +29,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install PyQt6 pyyaml pytest requests
+        pip install PyQt6 pyyaml pytest pytest-qt requests
         
     - name: Run Tests
       # We need a headless backend for PyQt6 tests on CI

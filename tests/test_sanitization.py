@@ -12,17 +12,22 @@ def test_sanitization_python(initializer):
         # Django
         config = {"project_name": "My Cool App", "target_dir": ".", "stack": "django"}
         
-        # Monkey patch _init_django to assert
-        initializer._init_django = MagicMock()
-        initializer.generate_project(config)
-        initializer._init_django.assert_called_with(ANY, "my_cool_app")
+        with patch.object(initializer, "_run_command") as mock_run:
+            initializer.generate_project(config)
+            # Check for sanitized name in command
+            # Django init usually involves "startproject <name>"
+            # We just check if the sanitized string was used in the formatted command
+            call_args = mock_run.call_args[0][0]
+            assert "my_cool_app" in call_args
         
         # FastAPI
         config["stack"] = "fastapi"
         config["project_name"] = "Fast-API-Demo"
-        initializer._init_fastapi = MagicMock()
-        initializer.generate_project(config)
-        initializer._init_fastapi.assert_called_with(ANY, "fast_api_demo")
+        
+        with patch.object(initializer, "_run_command") as mock_run:
+             initializer.generate_project(config)
+             call_args = mock_run.call_args[0][0]
+             assert "fast_api_demo" in call_args
 
 def test_sanitization_js(initializer):
     """Test kebab-case for JS stacks."""
