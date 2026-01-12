@@ -13,7 +13,7 @@
             "docker_cmd": "python manage.py runserver 0.0.0.0:8000"
         },
         "fastapi": {
-            "init_command": "mkdir {name} && cd {name} && python -m venv venv && echo 'fastapi\nuvicorn[standard]' > requirements.txt && echo 'from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/\")\ndef read_root():\n    return {\"Hello\": \"World\"}' > main.py && venv/Scripts/pip install -r requirements.txt",
+            "init_command": "mkdir {name} && cd {name} && python -m venv venv && echo 'fastapi\nuvicorn[standard]' > requirements.txt && echo 'from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/\")\ndef read_root():\n    return {{\"Hello\": \"World\"}}' > main.py && venv/Scripts/pip install -r requirements.txt",
             "docker_base": "python:3.11-slim",
             "docker_port": "8000:8000",
             "docker_cmd": "uvicorn main:app --host 0.0.0.0 --port 8000"
