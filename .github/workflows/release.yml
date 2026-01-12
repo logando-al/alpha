@@ -57,7 +57,7 @@ jobs:
         
     - name: Compile Installer with Inno Setup
       if: steps.check_tag.outputs.EXISTS == 'false'
-      uses: Minionguyjosh/inno-setup-action@v1.2.2
+      uses: Minionguyjosh/inno-setup-action@v1.2.5
       with:
         path: installer.iss
         
