@@ -13,9 +13,10 @@ a = Analysis(
     binaries=[],
     datas=[
         ('alpha/resources/icon.ico', 'alpha/resources'),
+        ('alpha/resources/icon.png', 'alpha/resources'),
         ('alpha/commands.json', 'alpha'),
     ],
-    hiddenimports=['alpha.splash', 'alpha.update', 'alpha.version', 'PyQt6'],
+    hiddenimports=['alpha.splash', 'alpha.update', 'alpha.version', 'alpha.utils', 'PyQt6'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

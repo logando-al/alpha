@@ -1,17 +1,17 @@
 import sys
 import time
-from pathlib import Path
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 from alpha.gui import AlphaInitializerWindow
 from alpha.splash import AlphaSplashScreen
+from alpha.utils import get_resource_path
 
 def main():
     app = QApplication(sys.argv)
     
-    # Splash Screen
-    icon_path = Path(__file__).parent / "alpha" / "resources" / "icon.png"
+    # Splash Screen - Use cross-platform resource path
+    icon_path = get_resource_path("alpha/resources/icon.png")
     splash = None
     
     if icon_path.exists():

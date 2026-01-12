@@ -174,9 +174,10 @@ class AlphaInitializerWindow(QMainWindow):
         self._populate_stacks()
 
     def _setup_ui(self):
-        # Icon
+        # Icon - Use cross-platform resource path
         from PyQt6.QtGui import QIcon
-        icon_path = Path(__file__).parent / "resources" / "icon.png"
+        from alpha.utils import get_resource_path
+        icon_path = get_resource_path("alpha/resources/icon.png")
         if icon_path.exists():
             self.setWindowIcon(QIcon(str(icon_path)))
 
