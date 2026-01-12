@@ -3,10 +3,13 @@
 
 # Unignore Source
 !/alpha/
+!/tests/
+!/.github/
 
 # Re-ignore artifacts inside
 alpha/__pycache__/
 alpha/resources/__pycache__/
+tests/__pycache__/
 
 # Unignore Documentation
 !/README.md
