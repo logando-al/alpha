@@ -6,11 +6,21 @@ from PyQt6.QtCore import Qt
 from alpha.gui import AlphaInitializerWindow
 from alpha.splash import AlphaSplashScreen
 from alpha.utils import get_resource_path
+from alpha.update import check_for_updates_blocking, show_forced_update_dialog
 
 def main():
     app = QApplication(sys.argv)
     
-    # Splash Screen - Use cross-platform resource path
+    # ===== AUTO-UPDATE CHECK (Before anything else) =====
+    # Check for updates synchronously at startup
+    is_update, new_version, release_url = check_for_updates_blocking()
+    
+    if is_update:
+        # Force update - show dialog, open browser, exit
+        show_forced_update_dialog(new_version, release_url)
+        return  # Won't reach here, sys.exit called in dialog
+    
+    # ===== SPLASH SCREEN =====
     icon_path = get_resource_path("alpha/resources/icon.png")
     splash = None
     
@@ -38,8 +48,9 @@ def main():
                  splash.set_progress(progress)
                  splash.showMessage(msg, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft, Qt.GlobalColor.white)
                  app.processEvents()
-                 time.sleep(0.3) # Fake delay
+                 time.sleep(0.3)  # Fake delay
 
+    # ===== MAIN WINDOW =====
     window = AlphaInitializerWindow()
     window.show()
     
