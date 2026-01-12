@@ -1,0 +1,40 @@
+{
+    "stacks": {
+        "nextjs": {
+            "init_command": "npx create-next-app@latest {name} --yes",
+            "docker_base": "node:18-alpine",
+            "docker_port": "3000:3000",
+            "docker_cmd": "npm run dev"
+        },
+        "django": {
+            "init_command": "mkdir {name} && cd {name} && python -m venv venv && venv/Scripts/pip install django && venv/Scripts/python -m django startproject {name} .",
+            "docker_base": "python:3.11-slim",
+            "docker_port": "8000:8000",
+            "docker_cmd": "python manage.py runserver 0.0.0.0:8000"
+        },
+        "fastapi": {
+            "init_command": "mkdir {name} && cd {name} && python -m venv venv && echo 'fastapi\nuvicorn[standard]' > requirements.txt && echo 'from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/\")\ndef read_root():\n    return {\"Hello\": \"World\"}' > main.py && venv/Scripts/pip install -r requirements.txt",
+            "docker_base": "python:3.11-slim",
+            "docker_port": "8000:8000",
+            "docker_cmd": "uvicorn main:app --host 0.0.0.0 --port 8000"
+        },
+        "react": {
+            "init_command": "npm create vite@latest {name} -- --template react",
+            "docker_base": "node:18-alpine",
+            "docker_port": "3000:5173",
+            "docker_cmd": "npm run dev"
+        },
+        "vue": {
+            "init_command": "npm create vite@latest {name} -- --template vue",
+            "docker_base": "node:18-alpine",
+            "docker_port": "8080:5173",
+            "docker_cmd": "npm run dev"
+        },
+        "pyqt6": {
+            "init_command": "mkdir {name} && cd {name} && python -m venv venv && echo 'PyQt6' > requirements.txt",
+            "docker_base": "python:3.11-slim",
+            "docker_port": "N/A",
+            "docker_cmd": "python main.py"
+        }
+    }
+}

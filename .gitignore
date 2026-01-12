@@ -1,0 +1,13 @@
+# Ignore everything in root
+/*
+
+# Unignore Source
+!/alpha/
+
+# Re-ignore artifacts inside
+alpha/__pycache__/
+alpha/resources/__pycache__/
+
+# Unignore Documentation
+!/README.md
+!/.gitignore
