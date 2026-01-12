@@ -13,8 +13,7 @@ a = Analysis(
     binaries=[],
     datas=[
         ('alpha/resources/icon.png', 'alpha/resources'),
-        ('templates', 'templates'), # Include templates for scaffolding
-        ('alpha/commands.json', 'alpha'), # Include minimal config
+        ('alpha/commands.json', 'alpha'),
     ],
     hiddenimports=['alpha.splash', 'alpha.update', 'alpha.version', 'PyQt6'],
     hookspath=[],
