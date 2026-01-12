@@ -10,6 +10,7 @@
 !/alpha.spec
 !/installer.iss
 !/requirements.txt
+!/main.py
 
 # Re-ignore artifacts inside
 alpha/__pycache__/

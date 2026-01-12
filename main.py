@@ -1,0 +1,52 @@
+import sys
+import time
+from pathlib import Path
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
+from alpha.gui import AlphaInitializerWindow
+from alpha.splash import AlphaSplashScreen
+
+def main():
+    app = QApplication(sys.argv)
+    
+    # Splash Screen
+    icon_path = Path(__file__).parent / "alpha" / "resources" / "icon.png"
+    splash = None
+    
+    if icon_path.exists():
+        pixmap = QPixmap(str(icon_path))
+        if not pixmap.isNull():
+             # Basic Scaling
+             if pixmap.width() > 500:
+                 pixmap = pixmap.scaled(500, 500, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            
+             # Create Custom Splash
+             splash = AlphaSplashScreen(pixmap)
+             splash.show()
+             
+             # Simulate Loading Steps
+             steps = [
+                 (10, "Loading configuration..."),
+                 (30, "Checking dependencies..."),
+                 (60, "Initializing UI components..."),
+                 (90, "Preparing workspace..."),
+                 (100, "Ready!")
+             ]
+             
+             for progress, msg in steps:
+                 splash.set_progress(progress)
+                 splash.showMessage(msg, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft, Qt.GlobalColor.white)
+                 app.processEvents()
+                 time.sleep(0.3) # Fake delay
+
+    window = AlphaInitializerWindow()
+    window.show()
+    
+    if splash:
+        splash.finish(window)
+        
+    sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()
