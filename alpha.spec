@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 # Get Path to Icon
-icon_path = str(Path('alpha/resources/icon.png').absolute())
+icon_path = str(Path('alpha/resources/icon.ico').absolute())
 
 block_cipher = None
 
@@ -12,7 +12,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('alpha/resources/icon.png', 'alpha/resources'),
+        ('alpha/resources/icon.ico', 'alpha/resources'),
         ('alpha/commands.json', 'alpha'),
     ],
     hiddenimports=['alpha.splash', 'alpha.update', 'alpha.version', 'PyQt6'],
