@@ -88,3 +88,41 @@ def test_sanitization_kebab_case():
         assert "test-project-one" in args
 
 # Note: Cross-platform path tests removed - patching os.name conflicts with PyQt6 bindings at runtime
+
+# Test 7: Superpower Framework Config Handling
+def test_superpower_framework_config(initializer, tmp_path):
+    """Verify use_superpower config is handled in generate_project."""
+    config = {
+        "project_name": "Super Test",  # Contains space to test sanitization
+        "target_dir": str(tmp_path),
+        "stack": "django",
+        "use_superpower": True
+    }
+    
+    with patch("alpha.initializer.subprocess.run") as mock_run, \
+         patch.object(initializer, "_apply_superpower_framework") as mock_superpower:
+        initializer.generate_project(config)
+        
+        # Verify superpower framework method was called
+        mock_superpower.assert_called_once()
+        
+        # Verify project path was passed correctly (snake_case for django: "Super Test" -> "super_test")
+        call_args = mock_superpower.call_args[0]
+        project_path = call_args[0]
+        assert project_path.name == "super_test"
+
+def test_superpower_framework_not_called_when_disabled(initializer, tmp_path):
+    """Verify use_superpower=False does not call framework method."""
+    config = {
+        "project_name": "NoSuper",
+        "target_dir": str(tmp_path),
+        "stack": "django",
+        "use_superpower": False
+    }
+    
+    with patch("alpha.initializer.subprocess.run") as mock_run, \
+         patch.object(initializer, "_apply_superpower_framework") as mock_superpower:
+        initializer.generate_project(config)
+        
+        # Verify superpower framework method was NOT called
+        mock_superpower.assert_not_called()

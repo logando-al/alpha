@@ -4,7 +4,9 @@ import yaml
 import subprocess
 import sys
 import json
+import logging
 from pathlib import Path
+from alpha.utils import get_resource_path
 
 class ProjectInitializer:
     def __init__(self, templates_dir="templates"):
@@ -70,6 +72,11 @@ class ProjectInitializer:
 
             else:
                  self._copy_stack_template(stack, project_root)
+
+            # Superpower Framework (before Docker)
+            use_superpower = config.get("use_superpower", False)
+            if use_superpower:
+                self._apply_superpower_framework(project_root)
 
             # Docker is injected AFTER project creation
             if use_docker:
@@ -315,3 +322,62 @@ class ProjectInitializer:
         }
         with open(destination / "docker-compose.yml", "w") as f:
             yaml.dump(compose_data, f, default_flow_style=False)
+
+    def _apply_superpower_framework(self, project_path):
+        """Copy bundled .agent folder and initialize git with a commit.
+        
+        This method handles errors gracefully - if anything fails, it logs
+        a warning but doesn't fail the project creation.
+        """
+        try:
+            # Locate bundled .agent folder
+            bundled_agent = get_resource_path("alpha/superpower_framework/.agent")
+            
+            if not bundled_agent.exists():
+                logging.warning(f"Bundled .agent folder not found at {bundled_agent}")
+                return
+            
+            # Copy to project
+            dest_agent = project_path / ".agent"
+            shutil.copytree(bundled_agent, dest_agent, dirs_exist_ok=True)
+            logging.info(f"Copied .agent framework to {dest_agent}")
+            
+            # Initialize git
+            self._init_git_with_agent(project_path)
+            
+        except Exception as e:
+            logging.warning(f"Superpower Framework setup failed (non-critical): {e}")
+
+    def _init_git_with_agent(self, project_path):
+        """Initialize git repo and commit .agent folder.
+        
+        Skips git init if repo already exists.
+        """
+        try:
+            # Check if git is available
+            result = subprocess.run(
+                ["git", "--version"], 
+                capture_output=True, 
+                check=True
+            )
+            
+            git_dir = project_path / ".git"
+            
+            # Only init if not already a git repo
+            if not git_dir.exists():
+                subprocess.run(["git", "init"], cwd=project_path, check=True)
+                logging.info(f"Initialized git repository in {project_path}")
+            
+            # Add and commit .agent
+            subprocess.run(["git", "add", ".agent"], cwd=project_path, check=True)
+            subprocess.run(
+                ["git", "commit", "-m", "Add Superpowers framework"],
+                cwd=project_path,
+                check=True
+            )
+            logging.info("Committed .agent folder to git")
+            
+        except FileNotFoundError:
+            logging.warning("Git not found on system - skipping git initialization")
+        except subprocess.CalledProcessError as e:
+            logging.warning(f"Git operation failed: {e}")

@@ -162,7 +162,7 @@ class AlphaInitializerWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("ALPHA Initializer")
-        self.setGeometry(100, 100, 600, 450)
+        self.setGeometry(100, 100, 600, 500)  # Increased height for Superpower checkbox
         
         # Initialize Backend
         self.initializer = ProjectInitializer()
@@ -242,6 +242,12 @@ class AlphaInitializerWindow(QMainWindow):
         self.check_docker = QCheckBox("Containerize with Docker")
         self.check_docker.setObjectName("check_docker")
         layout.addWidget(self.check_docker)
+
+        # Superpower Framework
+        self.check_superpower = QCheckBox("Superpower Framework")
+        self.check_superpower.setObjectName("check_superpower")
+        self.check_superpower.setToolTip("Include .agent folder and initialize git repository")
+        layout.addWidget(self.check_superpower)
 
         # Spacer
         layout.addStretch()
@@ -355,6 +361,7 @@ class AlphaInitializerWindow(QMainWindow):
 
         stack = self.combo_stack.currentText()
         use_docker = self.check_docker.isChecked()
+        use_superpower = self.check_superpower.isChecked()
         ui_fw = self.combo_ui.currentText() if self.combo_ui.isEnabled() else None
         
         config = {
@@ -362,6 +369,7 @@ class AlphaInitializerWindow(QMainWindow):
             "target_dir": target,
             "stack": stack,
             "use_docker": use_docker,
+            "use_superpower": use_superpower,
             "ui_framework": ui_fw
         }
 

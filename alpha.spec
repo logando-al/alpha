@@ -15,6 +15,7 @@ a = Analysis(
         ('alpha/resources/icon.ico', 'alpha/resources'),
         ('alpha/resources/icon.png', 'alpha/resources'),
         ('alpha/commands.json', 'alpha'),
+        ('alpha/superpower_framework', 'alpha/superpower_framework'),
     ],
     hiddenimports=['alpha.splash', 'alpha.update', 'alpha.version', 'alpha.utils', 'PyQt6'],
     hookspath=[],
