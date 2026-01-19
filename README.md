@@ -2,7 +2,7 @@
 
 **ALPHA** is a modern, modular project scaffolding tool designed for rapid stack initialization.
 
-![Version](https://img.shields.io/badge/version-1.1.5-purple)
+![Version](https://img.shields.io/badge/version-1.6.0-purple)
 ![License](https://img.shields.io/badge/license-Open%20Source-blue)
 
 ## Features
@@ -66,3 +66,9 @@ ALPHA automatically checks for updates on startup. If a new version is available
 ## Credits
 
 Developed by **logando-al** | Open Source
+
+### Superpower Framework
+
+The bundled Superpower Framework for Google Antigravity IDE is developed by **anthonylee991**.
+
+🔗 [gemini-superpowers-antigravity](https://github.com/anthonylee991/gemini-superpowers-antigravity)
