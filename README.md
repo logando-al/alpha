@@ -63,6 +63,9 @@ Click **Manage** next to the stack dropdown to add your own stack configurations
 
 ALPHA automatically checks for updates on startup. If a new version is available, you'll be prompted to download it from the releases page.
 
+## Improvements
+PRs are welcomed!
+
 ## Credits
 
 Developed by **logando-al** | Open Source
